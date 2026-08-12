@@ -1,16 +1,12 @@
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
-import { getCustomItems, type CollectionItem } from '../data/collectionStore'
+import CollectionFilters from '../components/CollectionFilters'
+import CollectionPagination from '../components/CollectionPagination'
+import { useCollectionBrowser } from '../hooks/useCollectionBrowser'
 import './StampsCollection.css'
 
 function StampsCollection() {
-  const [stamps, setStamps] = useState<CollectionItem[]>([])
-  useEffect(() => {
-    getCustomItems('stamps')
-      .then(setStamps)
-      .catch(error => console.error('Unable to load stamps:', error))
-  }, [])
+  const { items: stamps, filters, setFilters, options, page, setPage, total, totalPages, loading } = useCollectionBrowser('stamps')
   return (
     <div className="stamps-page">
       {/* Navigation */}
@@ -29,9 +25,11 @@ function StampsCollection() {
       {/* Stamps Grid */}
       <section className="stamps-grid-section">
         <div className="container">
+          <CollectionFilters options={options} values={filters} onChange={setFilters} />
           <div className="stamps-grid">
-            {stamps.length === 0 && <p className="collection-empty-state">No stamps have been added yet.</p>}
-            {stamps.map((stamp) => (
+            {loading && <p className="collection-empty-state" role="status">Loading stamps…</p>}
+            {!loading && total === 0 && <p className="collection-empty-state">No stamps match the selected filters.</p>}
+            {!loading && stamps.map((stamp) => (
               <Link
                 key={`${stamp.id}-${stamp.image}`}
                 to={`/collection/stamps/${stamp.id}`}
@@ -43,21 +41,21 @@ function StampsCollection() {
                   <div className="stamp-rarity-badge">{stamp.rarity}</div>
                 </div>
                 <div className="stamp-details">
-                  <h3 className="stamp-name">{stamp.name}</h3>
+                  <div className="stamp-title-row">
+                    <h3 className="stamp-name">{stamp.name}</h3>
+                    <span className="stamp-price">{stamp.price}</span>
+                  </div>
                   <div className="stamp-meta">
                     <span className="stamp-year">{stamp.year}</span>
                     <span className="stamp-divider">•</span>
                     <span className="stamp-country">{stamp.country}</span>
                   </div>
                   <p className="stamp-description">{stamp.description}</p>
-                  <div className="stamp-footer">
-                    <span className="stamp-price">{stamp.price}</span>
-                    <span className="btn btn-primary btn-sm">View details</span>
-                  </div>
                 </div>
               </Link>
             ))}
           </div>
+          <CollectionPagination page={page} totalPages={totalPages} total={total} onChange={setPage} />
         </div>
       </section>
 

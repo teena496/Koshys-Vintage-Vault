@@ -38,7 +38,7 @@ export default function CollectionDetail() {
     const panelBounds = event.currentTarget.parentElement?.getBoundingClientRect()
     if (!image || !panelBounds) return
     const imageBounds = image.getBoundingClientRect()
-    const lensRadius = 133
+    const lensRadius = 163
     const pointerX = event.clientX - panelBounds.left
     const pointerY = event.clientY - panelBounds.top
     const clampLensPosition = (position: number, panelSize: number) =>

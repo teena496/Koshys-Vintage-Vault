@@ -89,8 +89,8 @@
 }
 
 .stamp-image {
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
   transition: transform var(--transition-base);
@@ -127,6 +127,18 @@
   margin-bottom: var(--space-3);
 }
 
+.stamp-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.stamp-title-row .stamp-price {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
 .stamp-meta {
   display: flex;
   align-items: center;
@@ -148,14 +160,6 @@
   font-size: var(--text-base);
 }
 
-.stamp-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--color-cream-dark);
-}
-
 .stamp-price {
   font-family: var(--font-subheading);
   font-size: var(--text-xl);
@@ -170,10 +174,37 @@
 
 @media (min-width: 1100px) {
   .stamps-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .stamp-image-container { height: 240px; }
-  .stamp-details { padding: var(--space-5); }
-  .stamp-footer { gap: var(--space-3); }
-  .btn-sm { padding-inline: var(--space-3); }
+  .stamp-image-container {
+    height: 180px;
+    padding: var(--space-2);
+  }
+  .stamp-details { padding: var(--space-3); }
+  .stamp-name {
+    margin-bottom: var(--space-1);
+    font-size: var(--text-base);
+  }
+  .stamp-meta {
+    margin-bottom: var(--space-2);
+    font-size: 0.72rem;
+  }
+  .stamp-description {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    margin-bottom: var(--space-2);
+    font-size: 0.78rem;
+    line-height: 1.4;
+    -webkit-line-clamp: 1;
+  }
+  .stamp-rarity-badge {
+    padding: var(--space-1) var(--space-2);
+    font-size: 0.68rem;
+  }
+  .stamp-price { font-size: var(--text-sm); }
+  .btn-sm {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.72rem;
+  }
 }
 
 /* Responsive Design */
@@ -191,11 +222,23 @@
   }
   
   .stamps-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5);
   }
   
   .stamp-image-container {
-    height: 250px;
+    height: 180px;
+    padding: var(--space-3);
+  }
+
+  .stamp-details { padding: var(--space-4); }
+  .stamp-name { font-size: var(--text-lg); }
+  .stamp-description {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: var(--text-sm);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
   }
 }
 
@@ -215,13 +258,19 @@
   .stamps-grid-section { padding: var(--space-8) 0; }
 
   .stamps-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-3);
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    justify-items: center;
+  }
+
+  .stamp-card {
+    width: 100%;
+    max-width: 320px;
   }
 
   .stamp-image-container {
-    height: 150px;
-    padding: var(--space-3);
+    height: 140px;
+    padding: var(--space-2);
   }
 
   .stamp-rarity-badge {
@@ -234,7 +283,7 @@
   .stamp-details { padding: var(--space-3); }
 
   .stamp-name {
-    font-size: var(--text-lg);
+    font-size: var(--text-base);
     margin-bottom: var(--space-2);
   }
 
@@ -245,21 +294,15 @@
   }
 
   .stamp-description {
+    display: -webkit-box;
+    overflow: hidden;
     margin-bottom: var(--space-3);
     font-size: var(--text-sm);
     line-height: 1.5;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
   }
 
-  .stamp-price { font-size: var(--text-base); }
+  .stamp-price { font-size: var(--text-sm); }
 
-  .stamp-footer {
-    flex-direction: column;
-    gap: var(--space-3);
-    align-items: stretch;
-  }
-  
-  .btn-sm {
-    width: 100%;
-    padding: 0.5rem;
-  }
 }

@@ -1,16 +1,12 @@
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
-import { getCustomItems, type CollectionItem } from '../data/collectionStore'
+import CollectionFilters from '../components/CollectionFilters'
+import CollectionPagination from '../components/CollectionPagination'
+import { useCollectionBrowser } from '../hooks/useCollectionBrowser'
 import './StampsCollection.css'
 
 export default function PostalCoversCollection() {
-  const [covers, setCovers] = useState<CollectionItem[]>([])
-  useEffect(() => {
-    getCustomItems('covers')
-      .then(setCovers)
-      .catch(error => console.error('Unable to load postal covers:', error))
-  }, [])
+  const { items: covers, filters, setFilters, options, page, setPage, total, totalPages, loading } = useCollectionBrowser('covers')
 
   return (
     <div className="stamps-page">
@@ -27,9 +23,11 @@ export default function PostalCoversCollection() {
 
       <section className="stamps-grid-section">
         <div className="container">
+          <CollectionFilters options={options} values={filters} onChange={setFilters} />
           <div className="stamps-grid">
-            {covers.length === 0 && <p className="collection-empty-state">No postal covers have been added yet.</p>}
-            {covers.map(cover => (
+            {loading && <p className="collection-empty-state" role="status">Loading postal covers…</p>}
+            {!loading && total === 0 && <p className="collection-empty-state">No postal covers match the selected filters.</p>}
+            {!loading && covers.map(cover => (
               <Link
                 key={`${cover.id}-${cover.image}`}
                 to={`/collection/covers/${cover.id}`}
@@ -41,21 +39,21 @@ export default function PostalCoversCollection() {
                   <div className="stamp-rarity-badge">{cover.rarity}</div>
                 </div>
                 <div className="stamp-details">
-                  <h2 className="stamp-name">{cover.name}</h2>
+                  <div className="stamp-title-row">
+                    <h2 className="stamp-name">{cover.name}</h2>
+                    <span className="stamp-price">{cover.price}</span>
+                  </div>
                   <div className="stamp-meta">
                     <span>{cover.year}</span>
                     <span className="stamp-divider">•</span>
                     <span>{cover.country}</span>
                   </div>
                   <p className="stamp-description">{cover.description}</p>
-                  <div className="stamp-footer">
-                    <span className="stamp-price">{cover.price}</span>
-                    <span className="btn btn-primary btn-sm">View details</span>
-                  </div>
                 </div>
               </Link>
             ))}
           </div>
+          <CollectionPagination page={page} totalPages={totalPages} total={total} onChange={setPage} />
         </div>
       </section>
 

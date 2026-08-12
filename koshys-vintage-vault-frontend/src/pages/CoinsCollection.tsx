@@ -1,16 +1,12 @@
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
-import { getCustomItems, type CollectionItem } from '../data/collectionStore'
+import CollectionFilters from '../components/CollectionFilters'
+import CollectionPagination from '../components/CollectionPagination'
+import { useCollectionBrowser } from '../hooks/useCollectionBrowser'
 import './CoinsCollection.css'
 
 function CoinsCollection() {
-  const [coins, setCoins] = useState<CollectionItem[]>([])
-  useEffect(() => {
-    getCustomItems('coins')
-      .then(setCoins)
-      .catch(error => console.error('Unable to load coins:', error))
-  }, [])
+  const { items: coins, filters, setFilters, options, page, setPage, total, totalPages, loading } = useCollectionBrowser('coins')
   return (
     <div className="coins-page">
       {/* Navigation */}
@@ -29,9 +25,11 @@ function CoinsCollection() {
       {/* Coins Grid */}
       <section className="coins-grid-section">
         <div className="container">
+          <CollectionFilters options={options} values={filters} onChange={setFilters} />
           <div className="coins-grid">
-            {coins.length === 0 && <p className="collection-empty-state">No coins have been added yet.</p>}
-            {coins.map((coin) => (
+            {loading && <p className="collection-empty-state" role="status">Loading coins…</p>}
+            {!loading && total === 0 && <p className="collection-empty-state">No coins match the selected filters.</p>}
+            {!loading && coins.map((coin) => (
               <Link
                 key={`${coin.id}-${coin.image}`}
                 to={`/collection/coins/${coin.id}`}
@@ -43,21 +41,21 @@ function CoinsCollection() {
                   <div className="coin-rarity-badge">{coin.rarity}</div>
                 </div>
                 <div className="coin-details">
-                  <h3 className="coin-name">{coin.name}</h3>
+                  <div className="coin-title-row">
+                    <h3 className="coin-name">{coin.name}</h3>
+                    <span className="coin-price">{coin.price}</span>
+                  </div>
                   <div className="coin-meta">
                     <span className="coin-year">{coin.year}</span>
                     <span className="coin-divider">•</span>
                     <span className="coin-country">{coin.country}</span>
                   </div>
                   <p className="coin-description">{coin.description}</p>
-                  <div className="coin-footer">
-                    <span className="coin-price">{coin.price}</span>
-                    <span className="btn btn-primary btn-sm">View details</span>
-                  </div>
                 </div>
               </Link>
             ))}
           </div>
+          <CollectionPagination page={page} totalPages={totalPages} total={total} onChange={setPage} />
         </div>
       </section>
 

@@ -72,7 +72,7 @@
 
 .nav-links a {
   color: var(--color-cream);
-  font-family: var(--font-nav);
+  font-family: var(--font-subheading);
   font-size: var(--text-base);
   font-weight: 600;
   letter-spacing: 0.045em;

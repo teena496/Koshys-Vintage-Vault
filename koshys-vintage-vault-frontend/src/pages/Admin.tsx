@@ -11,6 +11,7 @@ interface FormData {
   country: string
   rarity: string
   price: string
+  currency: 'CAD' | 'INR'
   description: string
   image: File | null
 }
@@ -25,6 +26,7 @@ function Admin() {
     country: '',
     rarity: '',
     price: '',
+    currency: 'CAD',
     description: '',
     image: null
   })
@@ -40,6 +42,7 @@ function Admin() {
   const adminMenuRef = useRef<HTMLElement>(null)
   const adminMenuToggleRef = useRef<HTMLButtonElement>(null)
   const itemLabel = activeTab === 'stamps' ? 'Stamp' : activeTab === 'coins' ? 'Coin' : 'Postal Cover'
+  const nameCharacterLimit = 40
 
   useEffect(() => {
     let active = true
@@ -98,6 +101,12 @@ function Admin() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+        setSubmitStatus('error')
+        setStatusMessage('Please choose a JPG, PNG, or WebP image.')
+        e.target.value = ''
+        return
+      }
       if (file.size > 2 * 1024 * 1024) {
         setSubmitStatus('error')
         setStatusMessage('Please choose an image smaller than 2 MB.')
@@ -119,6 +128,36 @@ function Admin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    const trimmedName = formData.name.trim()
+    const trimmedYear = formData.year.trim()
+    const trimmedCountry = formData.country.trim()
+    const trimmedPrice = formData.price.trim().replace(/^[$₹]\s*/, '')
+    const trimmedDescription = formData.description.trim()
+
+    if (!trimmedName || !trimmedYear || !trimmedCountry || !formData.rarity || !trimmedPrice || !trimmedDescription) {
+      setSubmitStatus('error')
+      setStatusMessage('Please complete every required field.')
+      return
+    }
+
+    if (!/^\d{1,4}$/.test(trimmedYear)) {
+      setSubmitStatus('error')
+      setStatusMessage('Year must be a number containing up to 4 digits.')
+      return
+    }
+
+    if (!/^\d+(\.\d{1,2})?$/.test(trimmedPrice) || Number(trimmedPrice) <= 0) {
+      setSubmitStatus('error')
+      setStatusMessage('Price must be a positive number with up to 2 decimal places.')
+      return
+    }
+
+    if (trimmedDescription.length < 10) {
+      setSubmitStatus('error')
+      setStatusMessage('Description must contain at least 10 characters.')
+      return
+    }
+
     if (!imagePreview || (!editingItem && !formData.image)) {
       setSubmitStatus('error')
       setStatusMessage('Please add an image before saving.')
@@ -127,12 +166,12 @@ function Admin() {
 
     try {
       const values = {
-        name: formData.name.trim(),
-        year: formData.year.trim(),
-        country: formData.country.trim(),
+        name: trimmedName,
+        year: trimmedYear,
+        country: trimmedCountry,
         rarity: formData.rarity,
-        price: formData.price.trim(),
-        description: formData.description.trim()
+        price: `${formData.currency === 'CAD' ? 'CAD $' : '₹'}${trimmedPrice}`,
+        description: trimmedDescription
       }
 
       if (editingItem) {
@@ -151,14 +190,14 @@ function Admin() {
     } catch (error) {
       console.error(error)
       setSubmitStatus('error')
-      setStatusMessage('Unable to save this item. Confirm the database and Storage migrations are deployed, then try again.')
+      setStatusMessage(error instanceof Error ? error.message : 'Unable to save this item. Please try again.')
     }
   }
 
   const rarityOptions = ['Common', 'Uncommon', 'Rare', 'Very Rare', 'Extremely Rare', 'Unique']
 
   const resetForm = () => {
-    setFormData({ name: '', year: '', country: '', rarity: '', price: '', description: '', image: null })
+    setFormData({ name: '', year: '', country: '', rarity: '', price: '', currency: 'CAD', description: '', image: null })
     setImagePreview('')
     setFileInputKey(key => key + 1)
     setEditingItem(null)
@@ -173,13 +212,16 @@ function Admin() {
   }
 
   const handleEdit = (item: CollectionItem) => {
+    const isRupeePrice = item.price.trim().startsWith('₹') || item.price.trim().startsWith('INR')
+    const numericPrice = item.price.replace(/,/g, '').match(/\d+(?:\.\d+)?/)?.[0] ?? ''
     setEditingItem(item)
     setFormData({
       name: item.name,
       year: item.year,
       country: item.country,
       rarity: item.rarity,
-      price: item.price,
+      price: numericPrice,
+      currency: isRupeePrice ? 'INR' : 'CAD',
       description: item.description,
       image: null
     })
@@ -340,19 +382,28 @@ function Admin() {
                       value={formData.name}
                       onChange={handleInputChange}
                       placeholder={`e.g., ${activeTab === 'stamps' ? 'Penny Black' : activeTab === 'coins' ? '1933 Double Eagle' : 'First Flight Cover'}`}
+                      maxLength={nameCharacterLimit}
+                      aria-describedby="name-count"
                       required
                     />
+                    <span id="name-count" className="character-count" aria-live="polite">
+                      {formData.name.length}/{nameCharacterLimit} characters
+                    </span>
                   </div>
 
                   <div className="form-group">
                     <label htmlFor="year">Year *</label>
                     <input
-                      type="text"
+                      type="number"
                       id="year"
                       name="year"
                       value={formData.year}
                       onChange={handleInputChange}
                       placeholder="e.g., 1840"
+                      min="0"
+                      max="9999"
+                      step="1"
+                      inputMode="numeric"
                       required
                     />
                   </div>
@@ -366,8 +417,13 @@ function Admin() {
                       value={formData.country}
                       onChange={handleInputChange}
                       placeholder="e.g., United States"
+                      maxLength={60}
+                      aria-describedby="country-count"
                       required
                     />
+                    <span id="country-count" className="character-count" aria-live="polite">
+                      {formData.country.length}/60 characters
+                    </span>
                   </div>
 
                   <div className="form-group">
@@ -388,15 +444,30 @@ function Admin() {
 
                   <div className="form-group">
                     <label htmlFor="price">Price *</label>
-                    <input
-                      type="text"
-                      id="price"
-                      name="price"
-                      value={formData.price}
-                      onChange={handleInputChange}
-                      placeholder="e.g., $3,000 - $5,000"
-                      required
-                    />
+                    <div className="price-field-row">
+                      <select
+                        id="currency"
+                        name="currency"
+                        value={formData.currency}
+                        onChange={handleInputChange}
+                        aria-label="Currency"
+                      >
+                        <option value="CAD">CAD ($)</option>
+                        <option value="INR">INR (₹)</option>
+                      </select>
+                      <input
+                        type="number"
+                        id="price"
+                        name="price"
+                        value={formData.price}
+                        onChange={handleInputChange}
+                        placeholder={formData.currency === 'CAD' ? '3000' : '200000'}
+                        min="0.01"
+                        step="0.01"
+                        inputMode="decimal"
+                        required
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -411,6 +482,7 @@ function Admin() {
                       onChange={handleInputChange}
                       placeholder="Enter a detailed description..."
                       rows={6}
+                      minLength={10}
                       maxLength={200}
                       aria-describedby="description-count"
                       required
@@ -427,7 +499,7 @@ function Admin() {
                       type="file"
                       id="image"
                       name="image"
-                      accept="image/*"
+                      accept="image/jpeg,image/png,image/webp"
                       onChange={handleImageChange}
                       required={!editingItem}
                     />
