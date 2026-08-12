@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import Navbar from '../components/Navbar'
 import { addCustomItem, deleteCustomItem, getCustomItems, updateCustomItem, type CollectionItem, type CollectionType } from '../data/collectionStore'
 import { useAuth } from '../auth/AuthContext'
 import { useNavigate } from 'react-router-dom'
@@ -36,7 +35,10 @@ function Admin() {
   const [savedItems, setSavedItems] = useState<CollectionItem[]>([])
   const [editingItem, setEditingItem] = useState<CollectionItem | null>(null)
   const [showForm, setShowForm] = useState(false)
+  const [adminMenuOpen, setAdminMenuOpen] = useState(false)
   const formContainerRef = useRef<HTMLDivElement>(null)
+  const adminMenuRef = useRef<HTMLElement>(null)
+  const adminMenuToggleRef = useRef<HTMLButtonElement>(null)
   const itemLabel = activeTab === 'stamps' ? 'Stamp' : activeTab === 'coins' ? 'Coin' : 'Postal Cover'
 
   useEffect(() => {
@@ -57,6 +59,36 @@ function Admin() {
     const timeout = window.setTimeout(() => setSubmitStatus('idle'), 5000)
     return () => window.clearTimeout(timeout)
   }, [submitStatus, statusMessage])
+
+  useEffect(() => {
+    if (!showForm) return
+    const previousOverflow = document.body.style.overflow
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowForm(false)
+        setEditingItem(null)
+      }
+    }
+    document.body.style.overflow = 'hidden'
+    document.addEventListener('keydown', closeOnEscape)
+    window.setTimeout(() => formContainerRef.current?.focus(), 0)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [showForm])
+
+  useEffect(() => {
+    if (!adminMenuOpen) return
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      const target = event.target as Node
+      if (!adminMenuRef.current?.contains(target) && !adminMenuToggleRef.current?.contains(target)) {
+        setAdminMenuOpen(false)
+      }
+    }
+    document.addEventListener('pointerdown', closeOnOutsideClick)
+    return () => document.removeEventListener('pointerdown', closeOnOutsideClick)
+  }, [adminMenuOpen])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -135,6 +167,7 @@ function Admin() {
   const handleTabChange = (type: CollectionType) => {
     resetForm()
     setShowForm(false)
+    setAdminMenuOpen(false)
     setSubmitStatus('idle')
     setActiveTab(type)
   }
@@ -154,13 +187,11 @@ function Admin() {
     setFileInputKey(key => key + 1)
     setSubmitStatus('idle')
     setShowForm(true)
-    window.setTimeout(() => formContainerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 0)
   }
 
   const handleAdd = () => {
     resetForm()
     setShowForm(true)
-    window.setTimeout(() => formContainerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 0)
   }
 
   const handleCancel = () => {
@@ -192,8 +223,6 @@ function Admin() {
   return (
     <div className="admin-page">
       {/* Navigation */}
-      <Navbar currentPage="admin" />
-
       {submitStatus !== 'idle' && (
         <div
           className={`toast toast-${submitStatus}`}
@@ -218,19 +247,32 @@ function Admin() {
       {/* Admin Header */}
       <section className="admin-header">
         <div className="container">
+          <img src="/navbar-icon.png" alt="" className="admin-brand-mark" aria-hidden="true" />
           <button className="admin-sign-out" type="button" onClick={handleSignOut}>
             Sign out
           </button>
-          <h1 className="admin-title">Admin Panel</h1>
-          <p className="admin-subtitle">Manage stamps, coins, and postal covers</p>
-        </div>
-      </section>
-
-      {/* Admin Content */}
-      <section className="admin-content">
-        <div className="container">
-          {/* Tab Navigation */}
-          <div className="tab-navigation">
+          <div className="admin-heading">
+            <p className="admin-kicker">Koshy's Vintage Vault</p>
+            <h1 className="admin-title">Collection Dashboard</h1>
+            <p className="admin-subtitle">Manage stamps, coins, and postal covers</p>
+          </div>
+          <button
+            type="button"
+            className="admin-menu-toggle"
+            ref={adminMenuToggleRef}
+            aria-label="Toggle collection navigation"
+            aria-expanded={adminMenuOpen}
+            aria-controls="admin-collection-navigation"
+            onClick={() => setAdminMenuOpen(open => !open)}
+          >
+            <span></span><span></span><span></span>
+          </button>
+          <nav
+            id="admin-collection-navigation"
+            ref={adminMenuRef}
+            className={`tab-navigation${adminMenuOpen ? ' open' : ''}`}
+            aria-label="Collection management"
+          >
             <button
               className={`tab-button ${activeTab === 'stamps' ? 'active' : ''}`}
               onClick={() => handleTabChange('stamps')}
@@ -252,10 +294,32 @@ function Admin() {
             >
               Postal Covers
             </button>
-          </div>
+          </nav>
+        </div>
+      </section>
 
+      {/* Admin Content */}
+      <section className="admin-content">
+        <div className="container">
           {/* Form */}
-          {showForm && <div className="admin-form-container" ref={formContainerRef}>
+          {showForm && <div className="admin-modal-backdrop" onMouseDown={event => {
+            if (event.target === event.currentTarget) handleCancel()
+          }}>
+          <div
+            className="admin-form-container"
+            ref={formContainerRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="admin-form-title"
+            tabIndex={-1}
+          >
+            <div className="admin-form-header">
+              <div>
+                <p className="admin-list-eyebrow">Inventory editor</p>
+                <h2 id="admin-form-title">{editingItem ? `Edit ${itemLabel}` : `Add ${itemLabel}`}</h2>
+              </div>
+              <button type="button" className="admin-modal-close" onClick={handleCancel} aria-label="Close form">×</button>
+            </div>
             {editingItem && (
               <div className="editing-notice" role="status">
                 Editing <strong>{editingItem.name}</strong>. Update the fields below or cancel editing.
@@ -393,6 +457,7 @@ function Admin() {
                 )}
               </div>
             </form>
+          </div>
           </div>}
 
           <section className="admin-list-section" aria-labelledby="saved-items-title">
@@ -407,7 +472,8 @@ function Admin() {
                 {savedItems.length} {savedItems.length === 1 ? 'item' : 'items'}
               </span>
               <button type="button" className="btn btn-primary add-item-button" onClick={handleAdd}>
-                Add {itemLabel}
+                <span className="add-item-label-full">Add {itemLabel}</span>
+                <span className="add-item-label-mobile">+ Add</span>
               </button>
             </div>
 

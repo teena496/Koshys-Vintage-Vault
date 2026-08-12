@@ -34,7 +34,7 @@
 .section-kicker {
   margin: 0 0 var(--space-4);
   color: var(--color-burgundy-dark);
-  font-size: var(--text-sm);
+  font-size: 0.875rem;
   font-weight: 800;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -73,7 +73,7 @@
 
 .landing-hero .hero-cta .btn {
   font-family: var(--font-subheading);
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;

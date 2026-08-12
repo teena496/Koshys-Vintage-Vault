@@ -164,8 +164,8 @@
 }
 
 .btn-sm {
-  padding: var(--space-3) var(--space-6);
-  font-size: var(--text-sm);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
 }
 
 @media (min-width: 1100px) {
@@ -173,7 +173,7 @@
   .coin-image-container { height: 240px; }
   .coin-details { padding: var(--space-5); }
   .coin-footer { gap: var(--space-3); }
-  .btn-sm { padding-inline: var(--space-4); }
+  .btn-sm { padding-inline: var(--space-3); }
 }
 
 /* Responsive Design */
@@ -260,6 +260,6 @@
   
   .btn-sm {
     width: 100%;
-    padding: var(--space-2);
+    padding: 0.5rem;
   }
 }

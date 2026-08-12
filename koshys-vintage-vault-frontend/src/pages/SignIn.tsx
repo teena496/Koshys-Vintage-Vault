@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import './SignIn.css'
 
@@ -36,9 +36,7 @@ export default function SignIn() {
   return (
     <main className="sign-in-page">
       <section className="sign-in-card" aria-labelledby="sign-in-title">
-        <button className="back-home" type="button" onClick={() => navigate('/')}>
-          ← Back to collection
-        </button>
+        <Link className="back-home" to="/">← Back to main website</Link>
         <img src="/navbar-icon.png" alt="Koshy's Vintage Vault" className="sign-in-logo" />
         <p className="sign-in-eyebrow">Private administration</p>
         <h1 id="sign-in-title">Admin sign in</h1>
