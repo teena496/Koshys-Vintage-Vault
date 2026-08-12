@@ -45,7 +45,7 @@ export default function PostalCoversCollection() {
                   <p className="stamp-description">{cover.description}</p>
                   <div className="stamp-footer">
                     <span className="stamp-price">{cover.price}</span>
-                    <button className="btn btn-primary btn-sm">Inquire</button>
+                    <Link to={`/collection/covers/${cover.id}`} className="btn btn-primary btn-sm detail-card-link" aria-label={`View details for ${cover.name}`}>View details</Link>
                   </div>
                 </div>
               </article>

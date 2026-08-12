@@ -3,6 +3,7 @@ import Home from './pages/Home'
 import StampsCollection from './pages/StampsCollection'
 import CoinsCollection from './pages/CoinsCollection'
 import PostalCoversCollection from './pages/PostalCoversCollection'
+import CollectionDetail from './pages/CollectionDetail'
 import Admin from './pages/Admin'
 import ScrollToTop from './components/ScrollToTop'
 import SignIn from './pages/SignIn'
@@ -20,6 +21,7 @@ function App() {
           <Route path="/stamps" element={<StampsCollection />} />
           <Route path="/coins" element={<CoinsCollection />} />
           <Route path="/postal-covers" element={<PostalCoversCollection />} />
+          <Route path="/collection/:type/:id" element={<CollectionDetail />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
         </Routes>

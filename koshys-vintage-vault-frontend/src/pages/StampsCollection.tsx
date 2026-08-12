@@ -47,7 +47,7 @@ function StampsCollection() {
                   <p className="stamp-description">{stamp.description}</p>
                   <div className="stamp-footer">
                     <span className="stamp-price">{stamp.price}</span>
-                    <button className="btn btn-primary btn-sm">Inquire</button>
+                    <Link to={`/collection/stamps/${stamp.id}`} className="btn btn-primary btn-sm detail-card-link" aria-label={`View details for ${stamp.name}`}>View details</Link>
                   </div>
                 </div>
               </div>

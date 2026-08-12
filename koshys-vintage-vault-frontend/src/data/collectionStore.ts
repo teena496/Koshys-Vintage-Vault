@@ -59,6 +59,17 @@ export async function getCustomItems(type: CollectionType): Promise<CollectionIt
   return (data as CollectionRow[]).map(toCollectionItem)
 }
 
+export async function getCollectionItem(id: number): Promise<CollectionItem> {
+  const { data, error } = await supabase
+    .from('collection_items')
+    .select('id, name, year, country, rarity, price, description, image_url, image_path')
+    .eq('id', id)
+    .single()
+
+  if (error) throw error
+  return toCollectionItem(data as CollectionRow)
+}
+
 export async function addCustomItem(
   type: CollectionType,
   item: NewCollectionItem,

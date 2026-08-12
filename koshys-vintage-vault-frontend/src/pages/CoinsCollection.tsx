@@ -47,7 +47,7 @@ function CoinsCollection() {
                   <p className="coin-description">{coin.description}</p>
                   <div className="coin-footer">
                     <span className="coin-price">{coin.price}</span>
-                    <button className="btn btn-primary btn-sm">Inquire</button>
+                    <Link to={`/collection/coins/${coin.id}`} className="btn btn-primary btn-sm detail-card-link" aria-label={`View details for ${coin.name}`}>View details</Link>
                   </div>
                 </div>
               </div>

@@ -55,12 +55,18 @@
 
 /* Coin Card */
 .coin-card {
+  position: relative;
   background: white;
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-md);
   transition: all var(--transition-base);
   border: 1px solid #ddd3c2;
+}
+
+.coin-card:has(.detail-card-link:focus-visible) {
+  outline: 3px solid #2474d2;
+  outline-offset: 4px;
 }
 
 .coin-card:hover {

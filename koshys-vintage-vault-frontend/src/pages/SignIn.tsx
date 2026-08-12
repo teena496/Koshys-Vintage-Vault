@@ -39,7 +39,7 @@ export default function SignIn() {
         <button className="back-home" type="button" onClick={() => navigate('/')}>
           ← Back to collection
         </button>
-        <img src="/brand-logo.png" alt="Koshy's Vintage Vault" className="sign-in-logo" />
+        <img src="/navbar-icon.png" alt="Koshy's Vintage Vault" className="sign-in-logo" />
         <p className="sign-in-eyebrow">Private administration</p>
         <h1 id="sign-in-title">Admin sign in</h1>
         <p className="sign-in-intro">Enter your administrator credentials to manage the collection.</p>

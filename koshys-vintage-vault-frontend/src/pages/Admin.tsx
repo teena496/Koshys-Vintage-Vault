@@ -184,6 +184,11 @@ function Admin() {
     }
   }
 
+  const handleSignOut = async () => {
+    await signOut()
+    navigate('/sign-in', { replace: true })
+  }
+
   return (
     <div className="admin-page">
       {/* Navigation */}
@@ -213,7 +218,7 @@ function Admin() {
       {/* Admin Header */}
       <section className="admin-header">
         <div className="container">
-          <button className="admin-sign-out" type="button" onClick={() => { signOut(); navigate('/') }}>
+          <button className="admin-sign-out" type="button" onClick={handleSignOut}>
             Sign out
           </button>
           <h1 className="admin-title">Admin Panel</h1>

@@ -55,6 +55,7 @@
 
 /* Stamp Card */
 .stamp-card {
+  position: relative;
   background: white;
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -62,6 +63,20 @@
   transition: all var(--transition-base);
   border: 1px solid #ddd3c2;
 }
+
+.detail-card-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+}
+
+.stamp-card:has(.detail-card-link:focus-visible) {
+  outline: 3px solid #2474d2;
+  outline-offset: 4px;
+}
+
+.detail-card-link:focus-visible { outline: none; }
 
 .stamp-card:hover {
   transform: translateY(-5px);
