@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
-import { addCustomItem, deleteCustomItem, getCustomItems, type CollectionItem, type CollectionType } from '../data/collectionStore'
+import { addCustomItem, deleteCustomItem, getCustomItems, updateCustomItem, type CollectionItem, type CollectionType } from '../data/collectionStore'
 import { useAuth } from '../auth/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import './Admin.css'
@@ -34,6 +34,9 @@ function Admin() {
   const [statusMessage, setStatusMessage] = useState('')
   const [fileInputKey, setFileInputKey] = useState(0)
   const [savedItems, setSavedItems] = useState<CollectionItem[]>([])
+  const [editingItem, setEditingItem] = useState<CollectionItem | null>(null)
+  const [showForm, setShowForm] = useState(false)
+  const formContainerRef = useRef<HTMLDivElement>(null)
   const itemLabel = activeTab === 'stamps' ? 'Stamp' : activeTab === 'coins' ? 'Coin' : 'Postal Cover'
 
   useEffect(() => {
@@ -84,35 +87,35 @@ function Admin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!imagePreview || !formData.image) {
+    if (!imagePreview || (!editingItem && !formData.image)) {
       setSubmitStatus('error')
       setStatusMessage('Please add an image before saving.')
       return
     }
 
     try {
-      const savedItem = await addCustomItem(activeTab, {
+      const values = {
         name: formData.name.trim(),
         year: formData.year.trim(),
         country: formData.country.trim(),
         rarity: formData.rarity,
         price: formData.price.trim(),
         description: formData.description.trim()
-      }, formData.image)
-      setSavedItems(items => [savedItem, ...items])
-      setFormData({
-        name: '',
-        year: '',
-        country: '',
-        rarity: '',
-        price: '',
-        description: '',
-        image: null
-      })
-      setImagePreview('')
-      setFileInputKey(key => key + 1)
+      }
+
+      if (editingItem) {
+        const updatedItem = await updateCustomItem(activeTab, editingItem, values, formData.image)
+        setSavedItems(items => items.map(item => item.id === updatedItem.id ? updatedItem : item))
+        setStatusMessage(`${itemLabel} updated successfully.`)
+      } else {
+        const savedItem = await addCustomItem(activeTab, values, formData.image as File)
+        setSavedItems(items => [savedItem, ...items])
+        setStatusMessage(`${itemLabel} saved and added to the collection.`)
+      }
+
+      resetForm()
+      setShowForm(false)
       setSubmitStatus('success')
-      setStatusMessage(`${itemLabel} saved and added to the collection.`)
     } catch (error) {
       console.error(error)
       setSubmitStatus('error')
@@ -121,6 +124,49 @@ function Admin() {
   }
 
   const rarityOptions = ['Common', 'Uncommon', 'Rare', 'Very Rare', 'Extremely Rare', 'Unique']
+
+  const resetForm = () => {
+    setFormData({ name: '', year: '', country: '', rarity: '', price: '', description: '', image: null })
+    setImagePreview('')
+    setFileInputKey(key => key + 1)
+    setEditingItem(null)
+  }
+
+  const handleTabChange = (type: CollectionType) => {
+    resetForm()
+    setShowForm(false)
+    setSubmitStatus('idle')
+    setActiveTab(type)
+  }
+
+  const handleEdit = (item: CollectionItem) => {
+    setEditingItem(item)
+    setFormData({
+      name: item.name,
+      year: item.year,
+      country: item.country,
+      rarity: item.rarity,
+      price: item.price,
+      description: item.description,
+      image: null
+    })
+    setImagePreview(item.image)
+    setFileInputKey(key => key + 1)
+    setSubmitStatus('idle')
+    setShowForm(true)
+    window.setTimeout(() => formContainerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 0)
+  }
+
+  const handleAdd = () => {
+    resetForm()
+    setShowForm(true)
+    window.setTimeout(() => formContainerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 0)
+  }
+
+  const handleCancel = () => {
+    resetForm()
+    setShowForm(false)
+  }
 
   const handleDelete = async (item: CollectionItem) => {
     const confirmed = window.confirm(`Delete “${item.name}”? This action cannot be undone.`)
@@ -171,7 +217,7 @@ function Admin() {
             Sign out
           </button>
           <h1 className="admin-title">Admin Panel</h1>
-          <p className="admin-subtitle">Manage your stamp and coin collections</p>
+          <p className="admin-subtitle">Manage stamps, coins, and postal covers</p>
         </div>
       </section>
 
@@ -182,29 +228,34 @@ function Admin() {
           <div className="tab-navigation">
             <button
               className={`tab-button ${activeTab === 'stamps' ? 'active' : ''}`}
-              onClick={() => setActiveTab('stamps')}
+              onClick={() => handleTabChange('stamps')}
               aria-pressed={activeTab === 'stamps'}
             >
-              Add Stamp
+              Stamps
             </button>
             <button
               className={`tab-button ${activeTab === 'coins' ? 'active' : ''}`}
-              onClick={() => setActiveTab('coins')}
+              onClick={() => handleTabChange('coins')}
               aria-pressed={activeTab === 'coins'}
             >
-              Add Coin
+              Coins
             </button>
             <button
               className={`tab-button ${activeTab === 'covers' ? 'active' : ''}`}
-              onClick={() => setActiveTab('covers')}
+              onClick={() => handleTabChange('covers')}
               aria-pressed={activeTab === 'covers'}
             >
-              Add Postal Cover
+              Postal Covers
             </button>
           </div>
 
           {/* Form */}
-          <div className="admin-form-container">
+          {showForm && <div className="admin-form-container" ref={formContainerRef}>
+            {editingItem && (
+              <div className="editing-notice" role="status">
+                Editing <strong>{editingItem.name}</strong>. Update the fields below or cancel editing.
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="admin-form">
               <div className="form-grid">
                 {/* Left Column */}
@@ -301,7 +352,7 @@ function Admin() {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="image">Image *</label>
+                    <label htmlFor="image">Image {editingItem ? '(optional replacement)' : '*'}</label>
                     <input
                       key={fileInputKey}
                       type="file"
@@ -309,7 +360,7 @@ function Admin() {
                       name="image"
                       accept="image/*"
                       onChange={handleImageChange}
-                      required
+                      required={!editingItem}
                     />
                     {imagePreview && (
                       <div className="image-preview">
@@ -323,11 +374,21 @@ function Admin() {
               {/* Submit Button */}
               <div className="form-actions">
                 <button type="submit" className="btn btn-primary btn-large">
-                  Add {itemLabel}
+                  {editingItem ? `Update ${itemLabel}` : `Add ${itemLabel}`}
                 </button>
+                {editingItem && (
+                  <button type="button" className="btn cancel-edit-button" onClick={handleCancel}>
+                    Cancel
+                  </button>
+                )}
+                {!editingItem && (
+                  <button type="button" className="btn cancel-edit-button" onClick={handleCancel}>
+                    Cancel
+                  </button>
+                )}
               </div>
             </form>
-          </div>
+          </div>}
 
           <section className="admin-list-section" aria-labelledby="saved-items-title">
             <div className="admin-list-heading">
@@ -340,6 +401,9 @@ function Admin() {
               <span className="item-count" aria-label={`${savedItems.length} saved items`}>
                 {savedItems.length} {savedItems.length === 1 ? 'item' : 'items'}
               </span>
+              <button type="button" className="btn btn-primary add-item-button" onClick={handleAdd}>
+                Add {itemLabel}
+              </button>
             </div>
 
             {savedItems.length === 0 ? (
@@ -356,6 +420,14 @@ function Admin() {
                         <h3>{item.name}</h3>
                         <div className="admin-list-actions">
                           <span className="admin-rarity">{item.rarity}</span>
+                          <button
+                            type="button"
+                            className="edit-item-button"
+                            onClick={() => handleEdit(item)}
+                            aria-label={`Edit ${item.name}`}
+                          >
+                            Edit
+                          </button>
                           <button
                             type="button"
                             className="delete-item-button"
@@ -404,17 +476,14 @@ function Admin() {
             </div>
             
             <div className="footer-section">
-              <h3>Contact Us</h3>
-              <p>Email: info@koshysheritagevault.com</p>
-              <p>Phone: +1 (555) 123-4567</p>
-              <p>Hours: Mon-Sat, 10AM-6PM</p>
+              <h3>Connect</h3>
               <p><a href="https://www.facebook.com/share/1BNwJgWkdu/?mibextid=wwXIfr" target="_blank" rel="noreferrer">Follow us on Facebook</a></p>
             </div>
             
           </div>
           
           <div className="footer-bottom">
-            <p>&copy; 2025 Koshy's Heritage Vault. All rights reserved. | Established 1990</p>
+            <p>&copy; {new Date().getFullYear()} Koshy's Heritage Vault. All rights reserved.</p>
           </div>
         </div>
       </footer>

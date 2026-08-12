@@ -113,3 +113,57 @@ export async function deleteCustomItem(item: CollectionItem): Promise<void> {
     if (storageError) console.error('The database item was deleted, but its image could not be removed:', storageError)
   }
 }
+
+export async function updateCustomItem(
+  type: CollectionType,
+  existingItem: CollectionItem,
+  updates: NewCollectionItem,
+  imageFile: File | null
+): Promise<CollectionItem> {
+  let imageUrl = existingItem.image
+  let imagePath = existingItem.imagePath
+  let newlyUploadedPath: string | undefined
+
+  if (imageFile) {
+    const extension = imageFile.name.split('.').pop()?.toLowerCase() || 'jpg'
+    const safeExtension = extension.replace(/[^a-z0-9]/g, '') || 'jpg'
+    newlyUploadedPath = `${databaseTypes[type]}/${crypto.randomUUID()}.${safeExtension}`
+
+    const { error: uploadError } = await supabase.storage
+      .from('collection-images')
+      .upload(newlyUploadedPath, imageFile, { contentType: imageFile.type, upsert: false })
+    if (uploadError) throw uploadError
+
+    imagePath = newlyUploadedPath
+    imageUrl = supabase.storage.from('collection-images').getPublicUrl(newlyUploadedPath).data.publicUrl
+  }
+
+  const { data, error } = await supabase
+    .from('collection_items')
+    .update({
+      name: updates.name,
+      year: updates.year,
+      country: updates.country,
+      rarity: updates.rarity,
+      price: updates.price,
+      description: updates.description,
+      image_url: imageUrl,
+      image_path: imagePath
+    })
+    .eq('id', existingItem.id)
+    .select('id, name, year, country, rarity, price, description, image_url, image_path')
+    .single()
+
+  if (error) {
+    if (newlyUploadedPath) {
+      await supabase.storage.from('collection-images').remove([newlyUploadedPath])
+    }
+    throw error
+  }
+
+  if (newlyUploadedPath && existingItem.imagePath) {
+    await supabase.storage.from('collection-images').remove([existingItem.imagePath])
+  }
+
+  return toCollectionItem(data as CollectionRow)
+}

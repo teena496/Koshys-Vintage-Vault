@@ -4,44 +4,11 @@ import Navbar from '../components/Navbar'
 import { getCustomItems, type CollectionItem } from '../data/collectionStore'
 import './StampsCollection.css'
 
-const coversData: CollectionItem[] = [
-  {
-    id: -1,
-    name: 'Victorian Registered Cover',
-    year: '1892',
-    country: 'Great Britain',
-    rarity: 'Rare',
-    price: 'Price on request',
-    description: 'A registered Victorian-era cover with period postal markings and routing details preserved as part of its journey.',
-    image: '/stamps-hero.png'
-  },
-  {
-    id: -2,
-    name: 'First Flight Cover',
-    year: '1930',
-    country: 'India',
-    rarity: 'Very Rare',
-    price: 'Price on request',
-    description: 'An early airmail cover commemorating a pioneering flight, complete with historic stamps and cancellation marks.',
-    image: '/stamp-inverted-jenny.png'
-  },
-  {
-    id: -3,
-    name: 'Independence Day Cover',
-    year: '1947',
-    country: 'India',
-    rarity: 'Rare',
-    price: 'Price on request',
-    description: 'A postal-history cover from the year of Indian independence, documenting an important moment through its markings and postage.',
-    image: '/stamp-blue-mauritius.png'
-  }
-]
-
 export default function PostalCoversCollection() {
-  const [covers, setCovers] = useState(coversData)
+  const [covers, setCovers] = useState<CollectionItem[]>([])
   useEffect(() => {
     getCustomItems('covers')
-      .then(items => setCovers([...items, ...coversData]))
+      .then(setCovers)
       .catch(error => console.error('Unable to load postal covers:', error))
   }, [])
 
@@ -61,6 +28,7 @@ export default function PostalCoversCollection() {
       <section className="stamps-grid-section">
         <div className="container">
           <div className="stamps-grid">
+            {covers.length === 0 && <p className="collection-empty-state">No postal covers have been added yet.</p>}
             {covers.map(cover => (
               <article key={`${cover.id}-${cover.image}`} className="stamp-card">
                 <div className="stamp-image-container">
@@ -104,15 +72,12 @@ export default function PostalCoversCollection() {
               </ul>
             </div>
             <div className="footer-section">
-              <h3>Contact Us</h3>
-              <p>Email: info@koshysheritagevault.com</p>
-              <p>Phone: +1 (555) 123-4567</p>
-              <p>Hours: Mon-Sat, 10AM-6PM</p>
+              <h3>Connect</h3>
               <p><a href="https://www.facebook.com/share/1BNwJgWkdu/?mibextid=wwXIfr" target="_blank" rel="noreferrer">Follow us on Facebook</a></p>
             </div>
           </div>
           <div className="footer-bottom">
-            <p>&copy; 2025 Koshy's Heritage Vault. All rights reserved. | Established 1990</p>
+            <p>&copy; {new Date().getFullYear()} Koshy's Heritage Vault. All rights reserved.</p>
           </div>
         </div>
       </footer>

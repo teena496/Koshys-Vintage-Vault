@@ -59,6 +59,8 @@
   list-style: none;
 }
 
+.menu-toggle { display: none; }
+
 .nav-links a {
   color: var(--color-cream);
   font-weight: 650;
@@ -378,14 +380,70 @@
 
 @media (max-width: 768px) {
   .navbar-content {
-    flex-direction: column;
-    gap: var(--space-4);
+    position: relative;
+    flex-direction: row;
+    gap: var(--space-3);
   }
-  
+
+  .logo-container { min-width: 0; }
+
+  .brand-name {
+    overflow: hidden;
+    max-width: calc(100vw - 160px);
+    font-size: var(--text-lg);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .menu-toggle {
+    display: grid;
+    flex-shrink: 0;
+    gap: 5px;
+    width: 48px;
+    height: 48px;
+    place-content: center;
+    color: var(--color-cream);
+    background: transparent;
+    border: 2px solid rgba(240, 207, 114, 0.65);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+  }
+
+  .menu-toggle span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: currentColor;
+  }
+
   .nav-links {
-    gap: var(--space-4);
-    flex-wrap: wrap;
-    justify-content: center;
+    position: absolute;
+    top: calc(100% + var(--space-3));
+    left: 0;
+    right: 0;
+    display: none;
+    gap: 0;
+    padding: var(--space-2);
+    background: var(--color-navy);
+    border: 1px solid rgba(240, 207, 114, 0.35);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .nav-links.open { display: block; }
+
+  .nav-links a {
+    display: block;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-sm);
+  }
+
+  .nav-links a::after { display: none; }
+
+  .nav-links a:hover,
+  .nav-links a.active {
+    color: var(--color-navy);
+    background: var(--color-gold);
   }
   
   .hero-logo {
@@ -403,6 +461,10 @@
   .collections-grid {
     grid-template-columns: 1fr;
   }
+
+  .collection-overlay { transform: none; }
+
+  .collection-card:hover { transform: none; }
   
   .hero-cta {
     flex-direction: column;
@@ -422,7 +484,8 @@
   }
   
   .brand-name {
-    font-size: var(--text-lg);
+    max-width: calc(100vw - 132px);
+    font-size: var(--text-base);
   }
   
   .hero-logo {
@@ -432,6 +495,10 @@
   .collection-image {
     height: 250px;
   }
+
+  .collection-overlay { padding: var(--space-5); }
+
+  .collection-title { font-size: var(--text-2xl); }
   
   .about-image {
     height: 300px;

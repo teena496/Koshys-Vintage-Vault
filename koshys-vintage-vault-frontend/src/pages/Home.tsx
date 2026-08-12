@@ -93,9 +93,8 @@ function Home() {
             <div className="about-text">
               <h2>A Legacy of Excellence</h2>
               <p>
-                For over three decades, Koshy's Heritage Vault has been the premier destination for
-                discerning collectors seeking rare stamps and coins. Our passion for preserving history 
-                drives us to source only the finest pieces from around the world.
+                Koshy's Heritage Vault brings stamps, coins, and postal history together for collectors
+                who value the stories carried by every piece.
               </p>
               <p>
                 Each item in our collection is carefully selected, authenticated, and documented. We pride 
@@ -138,17 +137,14 @@ function Home() {
             </div>
             
             <div className="footer-section">
-              <h3>Contact Us</h3>
-              <p>Email: info@koshysheritagevault.com</p>
-              <p>Phone: +1 (555) 123-4567</p>
-              <p>Hours: Mon-Sat, 10AM-6PM</p>
+              <h3>Connect</h3>
               <p><a href="https://www.facebook.com/share/1BNwJgWkdu/?mibextid=wwXIfr" target="_blank" rel="noreferrer">Follow us on Facebook</a></p>
             </div>
             
           </div>
           
           <div className="footer-bottom">
-            <p>&copy; 2025 Koshy's Heritage Vault. All rights reserved. | Established 1990</p>
+            <p>&copy; {new Date().getFullYear()} Koshy's Heritage Vault. All rights reserved.</p>
           </div>
         </div>
       </footer>
