@@ -16,7 +16,10 @@ function Home() {
           <div className="hero-copy">
             <p className="hero-eyebrow">Coins · Stamps · Postal History</p>
             <h1 id="landing-title" className="hero-title">Collect history.<br />Preserve its story.</h1>
-            <p className="hero-subtitle">A considered collection of timeless pieces from around the world.</p>
+            <p className="hero-subtitle">
+              <span className="hero-subtitle-desktop">A considered collection of timeless pieces from around the world.</span>
+              <span className="hero-subtitle-mobile">Timeless pieces, thoughtfully collected.</span>
+            </p>
             <p className="hero-description">
               Explore coins, stamps, and postal covers selected for collectors who value history,
               craftsmanship, and the stories behind every object.

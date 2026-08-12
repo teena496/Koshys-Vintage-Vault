@@ -32,7 +32,12 @@ function CoinsCollection() {
           <div className="coins-grid">
             {coins.length === 0 && <p className="collection-empty-state">No coins have been added yet.</p>}
             {coins.map((coin) => (
-              <div key={`${coin.id}-${coin.image}`} className="coin-card">
+              <Link
+                key={`${coin.id}-${coin.image}`}
+                to={`/collection/coins/${coin.id}`}
+                className="coin-card detail-card-link"
+                aria-label={`View details for ${coin.name}`}
+              >
                 <div className="coin-image-container">
                   <img src={coin.image} alt={coin.name} className="coin-image" />
                   <div className="coin-rarity-badge">{coin.rarity}</div>
@@ -47,10 +52,10 @@ function CoinsCollection() {
                   <p className="coin-description">{coin.description}</p>
                   <div className="coin-footer">
                     <span className="coin-price">{coin.price}</span>
-                    <Link to={`/collection/coins/${coin.id}`} className="btn btn-primary btn-sm detail-card-link" aria-label={`View details for ${coin.name}`}>View details</Link>
+                    <span className="btn btn-primary btn-sm">View details</span>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

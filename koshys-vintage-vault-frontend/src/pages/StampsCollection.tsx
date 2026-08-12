@@ -32,7 +32,12 @@ function StampsCollection() {
           <div className="stamps-grid">
             {stamps.length === 0 && <p className="collection-empty-state">No stamps have been added yet.</p>}
             {stamps.map((stamp) => (
-              <div key={`${stamp.id}-${stamp.image}`} className="stamp-card">
+              <Link
+                key={`${stamp.id}-${stamp.image}`}
+                to={`/collection/stamps/${stamp.id}`}
+                className="stamp-card detail-card-link"
+                aria-label={`View details for ${stamp.name}`}
+              >
                 <div className="stamp-image-container">
                   <img src={stamp.image} alt={stamp.name} className="stamp-image" />
                   <div className="stamp-rarity-badge">{stamp.rarity}</div>
@@ -47,10 +52,10 @@ function StampsCollection() {
                   <p className="stamp-description">{stamp.description}</p>
                   <div className="stamp-footer">
                     <span className="stamp-price">{stamp.price}</span>
-                    <Link to={`/collection/stamps/${stamp.id}`} className="btn btn-primary btn-sm detail-card-link" aria-label={`View details for ${stamp.name}`}>View details</Link>
+                    <span className="btn btn-primary btn-sm">View details</span>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

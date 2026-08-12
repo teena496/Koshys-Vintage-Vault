@@ -30,7 +30,12 @@ export default function PostalCoversCollection() {
           <div className="stamps-grid">
             {covers.length === 0 && <p className="collection-empty-state">No postal covers have been added yet.</p>}
             {covers.map(cover => (
-              <article key={`${cover.id}-${cover.image}`} className="stamp-card">
+              <Link
+                key={`${cover.id}-${cover.image}`}
+                to={`/collection/covers/${cover.id}`}
+                className="stamp-card detail-card-link"
+                aria-label={`View details for ${cover.name}`}
+              >
                 <div className="stamp-image-container">
                   <img src={cover.image} alt={cover.name} className="stamp-image" />
                   <div className="stamp-rarity-badge">{cover.rarity}</div>
@@ -45,10 +50,10 @@ export default function PostalCoversCollection() {
                   <p className="stamp-description">{cover.description}</p>
                   <div className="stamp-footer">
                     <span className="stamp-price">{cover.price}</span>
-                    <Link to={`/collection/covers/${cover.id}`} className="btn btn-primary btn-sm detail-card-link" aria-label={`View details for ${cover.name}`}>View details</Link>
+                    <span className="btn btn-primary btn-sm">View details</span>
                   </div>
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
         </div>

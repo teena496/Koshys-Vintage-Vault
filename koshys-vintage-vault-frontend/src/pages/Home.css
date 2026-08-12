@@ -67,6 +67,8 @@
   line-height: 1.75;
 }
 
+.hero-subtitle-mobile { display: none; }
+
 .landing-hero .hero-cta { justify-content: flex-start; }
 
 .landing-hero .hero-cta .btn {
@@ -117,6 +119,10 @@
     background: linear-gradient(90deg, rgba(10, 16, 29, 0.94), rgba(10, 16, 29, 0.7));
   }
   .landing-hero .hero-title { font-size: clamp(2.75rem, 14vw, 4rem); }
+  .landing-hero .hero-subtitle { margin-bottom: var(--space-6); }
+  .landing-hero .hero-description,
+  .hero-subtitle-desktop { display: none; }
+  .hero-subtitle-mobile { display: inline; }
   .landing-hero .hero-cta { justify-content: center; }
   .hero-eyebrow { font-size: 0.7rem; }
 }
