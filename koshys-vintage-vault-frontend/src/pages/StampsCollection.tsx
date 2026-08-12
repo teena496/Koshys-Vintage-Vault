@@ -1,19 +1,10 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import { getCustomItems, type CollectionItem } from '../data/collectionStore'
 import './StampsCollection.css'
 
-interface Stamp {
-  id: number
-  name: string
-  year: string
-  country: string
-  rarity: string
-  price: string
-  description: string
-  image: string
-}
-
-const stampsData: Stamp[] = [
+const stampsData: CollectionItem[] = [
   {
     id: 1,
     name: 'Penny Black',
@@ -77,6 +68,12 @@ const stampsData: Stamp[] = [
 ]
 
 function StampsCollection() {
+  const [stamps, setStamps] = useState(stampsData)
+  useEffect(() => {
+    getCustomItems('stamps')
+      .then(items => setStamps([...items, ...stampsData]))
+      .catch(error => console.error('Unable to load stamps:', error))
+  }, [])
   return (
     <div className="stamps-page">
       {/* Navigation */}
@@ -96,8 +93,8 @@ function StampsCollection() {
       <section className="stamps-grid-section">
         <div className="container">
           <div className="stamps-grid">
-            {stampsData.map((stamp) => (
-              <div key={stamp.id} className="stamp-card">
+            {stamps.map((stamp) => (
+              <div key={`${stamp.id}-${stamp.image}`} className="stamp-card">
                 <div className="stamp-image-container">
                   <img src={stamp.image} alt={stamp.name} className="stamp-image" />
                   <div className="stamp-rarity-badge">{stamp.rarity}</div>
@@ -126,7 +123,7 @@ function StampsCollection() {
         <div className="container">
           <div className="footer-content">
             <div className="footer-section">
-              <h3>Koshy's Vintage Vault</h3>
+              <h3>Koshy's Heritage Vault</h3>
               <p>
                 Your trusted source for rare stamps and coins. Preserving history, one collectible at a time.
               </p>
@@ -138,27 +135,23 @@ function StampsCollection() {
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/stamps">Stamps</Link></li>
                 <li><Link to="/coins">Coins</Link></li>
+                <li><Link to="/postal-covers">Postal Covers</Link></li>
                 <li><a href="/#about">About Us</a></li>
               </ul>
             </div>
             
             <div className="footer-section">
               <h3>Contact Us</h3>
-              <p>Email: info@koshysvintagevault.com</p>
+              <p>Email: info@koshysheritagevault.com</p>
               <p>Phone: +1 (555) 123-4567</p>
               <p>Hours: Mon-Sat, 10AM-6PM</p>
+              <p><a href="https://www.facebook.com/share/1BNwJgWkdu/?mibextid=wwXIfr" target="_blank" rel="noreferrer">Follow us on Facebook</a></p>
             </div>
             
-            <div className="footer-section">
-              <h3>Visit Our Store</h3>
-              <p>123 Heritage Lane</p>
-              <p>Historic District</p>
-              <p>City, State 12345</p>
-            </div>
           </div>
           
           <div className="footer-bottom">
-            <p>&copy; 2025 Koshy's Vintage Vault. All rights reserved. | Established 1990</p>
+            <p>&copy; 2025 Koshy's Heritage Vault. All rights reserved. | Established 1990</p>
           </div>
         </div>
       </footer>

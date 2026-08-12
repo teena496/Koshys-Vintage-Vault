@@ -1,5 +1,5 @@
+import { useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useRef } from 'react'
 
 interface NavbarProps {
   currentPage?: string
@@ -7,39 +7,42 @@ interface NavbarProps {
 
 function Navbar({ currentPage }: NavbarProps) {
   const navigate = useNavigate()
-  const clickTimeoutRef = useRef<number | null>(null)
+  const logoClickTimer = useRef<number | null>(null)
 
-  const handleLogoClick = (e: React.MouseEvent) => {
-    e.preventDefault()
-    
-    if (clickTimeoutRef.current) {
-      // Double click detected
-      clearTimeout(clickTimeoutRef.current)
-      clickTimeoutRef.current = null
-      navigate('/admin')
-    } else {
-      // First click - wait for potential second click
-      clickTimeoutRef.current = setTimeout(() => {
-        clickTimeoutRef.current = null
-        navigate('/')
-      }, 300) // 300ms window for double-click
+  useEffect(() => () => {
+    if (logoClickTimer.current !== null) {
+      window.clearTimeout(logoClickTimer.current)
     }
+  }, [])
+
+  const handleLogoClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault()
+
+    if (logoClickTimer.current !== null) {
+      window.clearTimeout(logoClickTimer.current)
+      logoClickTimer.current = null
+      navigate('/admin')
+      return
+    }
+
+    logoClickTimer.current = window.setTimeout(() => {
+      logoClickTimer.current = null
+      navigate('/')
+    }, 300)
   }
 
   return (
-    <nav className="navbar">
+    <nav className="navbar" aria-label="Primary navigation">
       <div className="container navbar-content">
-        <a href="/" onClick={handleLogoClick} className="logo-container">
-          <img src="/logo.jpg" alt="Koshy's Vintage Vault Logo" className="logo" />
-          <h1 className="brand-name">Koshy's Vintage Vault</h1>
-        </a>
+        <Link to="/" className="logo-container" onClick={handleLogoClick}>
+          <img src="/brand-logo.png" alt="Koshy's Heritage Vault" className="logo" />
+          <h1 className="brand-name">Koshy's Heritage Vault</h1>
+        </Link>
         <ul className="nav-links">
-          <li><Link to="/" className={currentPage === 'home' ? 'active' : ''}>Home</Link></li>
-          <li><Link to="/stamps" className={currentPage === 'stamps' ? 'active' : ''}>Stamps</Link></li>
-          <li><Link to="/coins" className={currentPage === 'coins' ? 'active' : ''}>Coins</Link></li>
-          {currentPage === 'admin' && (
-            <li><Link to="/admin" className="active">Admin</Link></li>
-          )}
+          <li><Link to="/" className={currentPage === 'home' ? 'active' : ''} aria-current={currentPage === 'home' ? 'page' : undefined}>Home</Link></li>
+          <li><Link to="/stamps" className={currentPage === 'stamps' ? 'active' : ''} aria-current={currentPage === 'stamps' ? 'page' : undefined}>Stamps</Link></li>
+          <li><Link to="/coins" className={currentPage === 'coins' ? 'active' : ''} aria-current={currentPage === 'coins' ? 'page' : undefined}>Coins</Link></li>
+          <li><Link to="/postal-covers" className={currentPage === 'covers' ? 'active' : ''} aria-current={currentPage === 'covers' ? 'page' : undefined}>Postal Covers</Link></li>
         </ul>
       </div>
     </nav>

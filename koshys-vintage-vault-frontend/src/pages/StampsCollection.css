@@ -32,6 +32,7 @@
 /* Stamps Grid Section */
 .stamps-grid-section {
   padding: var(--space-20) 0;
+  background: linear-gradient(180deg, #faf7f0 0%, #f4efe5 100%);
 }
 
 .stamps-grid {
@@ -47,18 +48,18 @@
   overflow: hidden;
   box-shadow: var(--shadow-md);
   transition: all var(--transition-base);
-  border: 2px solid transparent;
+  border: 1px solid #ddd3c2;
 }
 
 .stamp-card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-5px);
   box-shadow: var(--shadow-xl);
   border-color: var(--color-gold);
 }
 
 .stamp-image-container {
   position: relative;
-  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+  background: linear-gradient(145deg, #f5f1e8 0%, #e5dccb 100%);
   padding: var(--space-8);
   height: 300px;
   display: flex;
@@ -110,13 +111,13 @@
   align-items: center;
   gap: var(--space-2);
   margin-bottom: var(--space-4);
-  color: var(--color-burgundy);
+  color: var(--color-burgundy-dark);
   font-weight: 600;
   font-size: var(--text-sm);
 }
 
 .stamp-divider {
-  color: var(--color-gold);
+  color: var(--color-gold-dark);
 }
 
 .stamp-description {

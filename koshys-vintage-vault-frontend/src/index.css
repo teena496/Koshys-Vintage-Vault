@@ -1,5 +1,5 @@
 /* ===================================
-   DESIGN SYSTEM - Koshy's Vintage Vault
+   DESIGN SYSTEM - Koshy's Heritage Vault
    =================================== */
 
 /* CSS Reset & Base Styles */
@@ -11,18 +11,21 @@
 
 :root {
   /* Color Palette - Vintage & Premium */
-  --color-navy: #1a1d2e;
-  --color-burgundy: #8b2635;
-  --color-burgundy-dark: #6b1d28;
-  --color-gold: #d4af37;
-  --color-gold-light: #f4d03f;
-  --color-cream: #f5f1e8;
-  --color-cream-dark: #e8dfc8;
+  --color-navy: #121827;
+  --color-navy-soft: #202a3d;
+  --color-burgundy: #76283b;
+  --color-burgundy-dark: #531b2a;
+  --color-gold: #f0cf72;
+  --color-gold-dark: #755500;
+  --color-gold-light: #ffe9a8;
+  --color-cream: #faf7f0;
+  --color-cream-dark: #e8e0d1;
+  --color-ink-muted: #4b5565;
   --color-bronze: #cd7f32;
   
   /* Gradients */
   --gradient-hero: linear-gradient(135deg, rgba(26, 29, 46, 0.95) 0%, rgba(139, 38, 53, 0.85) 100%);
-  --gradient-gold: linear-gradient(135deg, #d4af37 0%, #f4d03f 50%, #d4af37 100%);
+  --gradient-gold: linear-gradient(135deg, #f0cf72 0%, #ffe9a8 50%, #e7bc4c 100%);
   --gradient-overlay: linear-gradient(180deg, rgba(26, 29, 46, 0) 0%, rgba(26, 29, 46, 0.8) 100%);
   
   /* Typography */
@@ -57,9 +60,9 @@
   
   /* Border Radius */
   --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 1.125rem;
+  --radius-xl: 1.75rem;
   
   /* Shadows */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -87,6 +90,26 @@ body {
   background-color: var(--color-cream);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.auth-loading {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  color: var(--color-cream);
+  background: var(--color-navy);
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+::selection {
+  color: var(--color-navy);
+  background: var(--color-gold);
+}
+
+:focus-visible {
+  outline: 3px solid #2474d2;
+  outline-offset: 3px;
 }
 
 /* Typography Utilities */
@@ -121,7 +144,7 @@ a {
 }
 
 a:hover {
-  color: var(--color-gold);
+  color: var(--color-burgundy-dark);
 }
 
 /* Container */
@@ -140,7 +163,7 @@ a:hover {
   font-size: var(--text-base);
   font-weight: 600;
   text-align: center;
-  border: none;
+  border: 2px solid transparent;
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: all var(--transition-base);
@@ -152,6 +175,10 @@ a:hover {
   background: var(--gradient-gold);
   color: var(--color-navy);
   box-shadow: var(--shadow-gold);
+}
+
+.btn-primary:hover {
+  color: var(--color-navy);
 }
 
 .btn-primary:hover {
@@ -194,7 +221,7 @@ a:hover {
 }
 
 .text-gold {
-  color: var(--color-gold);
+  color: var(--color-gold-dark);
 }
 
 .text-burgundy {
@@ -252,6 +279,15 @@ a:hover {
 
 .fade-in-up {
   animation: fadeInUp 0.8s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Responsive Typography */

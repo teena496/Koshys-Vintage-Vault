@@ -13,8 +13,8 @@ function Home() {
         <img src="/stamps-hero.png" alt="Vintage Stamps Collection" className="hero-background" />
         <div className="hero-overlay"></div>
         <div className="hero-content">
-          <img src="/hero-logo.jpg" alt="Koshy's Vintage Vault" className="hero-logo" />
-          <h1 className="hero-title">Koshy's Vintage Vault</h1>
+          <img src="/brand-logo.png" alt="Koshy's Heritage Vault — coins, stamps, stories through time" className="hero-logo" />
+          <h1 className="hero-title">Koshy's Heritage Vault</h1>
           <p className="hero-subtitle">Timeless Treasures from Bygone Eras</p>
           <p className="hero-description">
             Discover our curated collection of rare stamps and coins, each piece telling a unique story 
@@ -61,6 +61,17 @@ function Home() {
             </Link>
 
             {/* Expert Authentication */}
+            <Link to="/postal-covers" className="collection-card">
+              <img src="/stamp-inverted-jenny.png" alt="Historic postal covers" className="collection-image" />
+              <div className="collection-overlay">
+                <h3 className="collection-title">Postal Covers</h3>
+                <p className="collection-description">
+                  Historic envelopes, first-day covers, and postmarked postal history preserving the routes and stories of their time.
+                </p>
+              </div>
+            </Link>
+
+            {/* Expert Authentication */}
             <div className="collection-card">
               <img src="/examining.png" alt="Expert Authentication" className="collection-image" />
               <div className="collection-overlay">
@@ -82,7 +93,7 @@ function Home() {
             <div className="about-text">
               <h2>A Legacy of Excellence</h2>
               <p>
-                For over three decades, Koshy's Vintage Vault has been the premier destination for 
+                For over three decades, Koshy's Heritage Vault has been the premier destination for
                 discerning collectors seeking rare stamps and coins. Our passion for preserving history 
                 drives us to source only the finest pieces from around the world.
               </p>
@@ -104,24 +115,12 @@ function Home() {
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="cta-section">
-        <div className="container">
-          <h2>Start Your Collection Today</h2>
-          <p>
-            Join our community of passionate collectors and discover pieces that will become 
-            cherished heirlooms for generations to come.
-          </p>
-          <a href="#contact" className="btn btn-primary">Get in Touch</a>
-        </div>
-      </section>
-
       {/* Footer */}
       <footer id="contact" className="footer">
         <div className="container">
           <div className="footer-content">
             <div className="footer-section">
-              <h3>Koshy's Vintage Vault</h3>
+              <h3>Koshy's Heritage Vault</h3>
               <p>
                 Your trusted source for rare stamps and coins. Preserving history, one collectible at a time.
               </p>
@@ -133,27 +132,23 @@ function Home() {
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/stamps">Stamps</Link></li>
                 <li><Link to="/coins">Coins</Link></li>
+                <li><Link to="/postal-covers">Postal Covers</Link></li>
                 <li><a href="#about">About Us</a></li>
               </ul>
             </div>
             
             <div className="footer-section">
               <h3>Contact Us</h3>
-              <p>Email: info@koshysvintagevault.com</p>
+              <p>Email: info@koshysheritagevault.com</p>
               <p>Phone: +1 (555) 123-4567</p>
               <p>Hours: Mon-Sat, 10AM-6PM</p>
+              <p><a href="https://www.facebook.com/share/1BNwJgWkdu/?mibextid=wwXIfr" target="_blank" rel="noreferrer">Follow us on Facebook</a></p>
             </div>
             
-            <div className="footer-section">
-              <h3>Visit Our Store</h3>
-              <p>123 Heritage Lane</p>
-              <p>Historic District</p>
-              <p>City, State 12345</p>
-            </div>
           </div>
           
           <div className="footer-bottom">
-            <p>&copy; 2025 Koshy's Vintage Vault. All rights reserved. | Established 1990</p>
+            <p>&copy; 2025 Koshy's Heritage Vault. All rights reserved. | Established 1990</p>
           </div>
         </div>
       </footer>
