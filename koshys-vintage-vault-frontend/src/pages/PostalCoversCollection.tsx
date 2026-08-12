@@ -18,12 +18,12 @@ export default function PostalCoversCollection() {
           <p className="page-subtitle">
             Explore historic envelopes, postmarks, routes, and first-day covers that document postal history
           </p>
+          <CollectionFilters options={options} values={filters} onChange={setFilters} />
         </div>
       </section>
 
       <section className="stamps-grid-section">
         <div className="container">
-          <CollectionFilters options={options} values={filters} onChange={setFilters} />
           <div className="stamps-grid">
             {loading && <p className="collection-empty-state" role="status">Loading postal covers…</p>}
             {!loading && total === 0 && <p className="collection-empty-state">No postal covers match the selected filters.</p>}

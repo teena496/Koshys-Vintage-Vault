@@ -19,13 +19,13 @@ function CoinsCollection() {
           <p className="page-subtitle">
             Discover our curated selection of the world's most sought-after numismatic treasures
           </p>
+          <CollectionFilters options={options} values={filters} onChange={setFilters} />
         </div>
       </section>
 
       {/* Coins Grid */}
       <section className="coins-grid-section">
         <div className="container">
-          <CollectionFilters options={options} values={filters} onChange={setFilters} />
           <div className="coins-grid">
             {loading && <p className="collection-empty-state" role="status">Loading coins…</p>}
             {!loading && total === 0 && <p className="collection-empty-state">No coins match the selected filters.</p>}

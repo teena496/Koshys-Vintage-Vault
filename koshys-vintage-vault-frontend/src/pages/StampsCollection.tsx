@@ -19,13 +19,13 @@ function StampsCollection() {
           <p className="page-subtitle">
             Discover our curated selection of the world's most sought-after philatelic treasures
           </p>
+          <CollectionFilters options={options} values={filters} onChange={setFilters} />
         </div>
       </section>
 
       {/* Stamps Grid */}
       <section className="stamps-grid-section">
         <div className="container">
-          <CollectionFilters options={options} values={filters} onChange={setFilters} />
           <div className="stamps-grid">
             {loading && <p className="collection-empty-state" role="status">Loading stamps…</p>}
             {!loading && total === 0 && <p className="collection-empty-state">No stamps match the selected filters.</p>}

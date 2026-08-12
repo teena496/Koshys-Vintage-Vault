@@ -8,7 +8,7 @@
 /* Page Header */
 .page-header {
   background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-burgundy) 100%);
-  padding: var(--space-6) 0;
+  padding: var(--space-5) 0 var(--space-6);
   margin-top: 80px;
   text-align: center;
   color: var(--color-cream);
@@ -245,7 +245,7 @@
 @media (max-width: 480px) {
   .page-header {
     margin-top: 68px;
-    padding: var(--space-4) 0;
+    padding: var(--space-3) 0 var(--space-4);
   }
 
   .page-title {
