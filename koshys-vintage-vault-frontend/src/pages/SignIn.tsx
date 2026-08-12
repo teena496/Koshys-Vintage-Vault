@@ -37,10 +37,8 @@ export default function SignIn() {
     <main className="sign-in-page">
       <section className="sign-in-card" aria-labelledby="sign-in-title">
         <Link className="back-home" to="/">← Back to main website</Link>
-        <img src="/navbar-icon.png" alt="Koshy's Vintage Vault" className="sign-in-logo" />
-        <p className="sign-in-eyebrow">Private administration</p>
+        <img src="/admin-signin-logo.png" alt="Koshy's Vintage Vault administration" className="sign-in-logo" />
         <h1 id="sign-in-title">Admin sign in</h1>
-        <p className="sign-in-intro">Enter your administrator credentials to manage the collection.</p>
 
         <form className="sign-in-form" onSubmit={handleSubmit}>
           <div className="form-group">

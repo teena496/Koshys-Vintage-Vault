@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { addCustomItem, deleteCustomItem, getCustomItems, updateCustomItem, type CollectionItem, type CollectionType } from '../data/collectionStore'
 import { useAuth } from '../auth/AuthContext'
 import { useNavigate } from 'react-router-dom'
@@ -289,15 +288,21 @@ function Admin() {
       {/* Admin Header */}
       <section className="admin-header">
         <div className="container">
-          <img src="/navbar-icon.png" alt="" className="admin-brand-mark" aria-hidden="true" />
-          <button className="admin-sign-out" type="button" onClick={handleSignOut}>
-            Sign out
+          <button
+            type="button"
+            className="admin-brand-home"
+            onDoubleClick={() => navigate('/')}
+            onKeyDown={event => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault()
+                navigate('/')
+              }
+            }}
+            aria-label="Return to main website (double-click)"
+            title="Double-click to return to the main website"
+          >
+            <img src="/admin-navbar-brand.png" alt="Koshy's Vintage Vault Admin" className="admin-brand-mark" />
           </button>
-          <div className="admin-heading">
-            <p className="admin-kicker">Koshy's Vintage Vault</p>
-            <h1 className="admin-title">Collection Dashboard</h1>
-            <p className="admin-subtitle">Manage stamps, coins, and postal covers</p>
-          </div>
           <button
             type="button"
             className="admin-menu-toggle"
@@ -337,6 +342,9 @@ function Admin() {
               Postal Covers
             </button>
           </nav>
+          <button className="admin-sign-out" type="button" onClick={handleSignOut}>
+            Sign out
+          </button>
         </div>
       </section>
 
@@ -596,40 +604,6 @@ function Admin() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="footer">
-        <div className="container">
-          <div className="footer-content">
-            <div className="footer-section">
-              <h3>Koshy's Vintage Vault</h3>
-              <p>
-                Your trusted source for rare stamps and coins. Preserving history, one collectible at a time.
-              </p>
-            </div>
-            
-            <div className="footer-section">
-              <h3>Quick Links</h3>
-              <ul className="footer-links">
-                <li><Link to="/">Home</Link></li>
-                <li><Link to="/stamps">Stamps</Link></li>
-                <li><Link to="/coins">Coins</Link></li>
-                <li><Link to="/postal-covers">Postal Covers</Link></li>
-                <li><a href="/#about">About Us</a></li>
-              </ul>
-            </div>
-            
-            <div className="footer-section">
-              <h3>Connect</h3>
-              <p><a href="https://www.facebook.com/share/1BNwJgWkdu/?mibextid=wwXIfr" target="_blank" rel="noreferrer">Follow us on Facebook</a></p>
-            </div>
-            
-          </div>
-          
-          <div className="footer-bottom">
-            <p>&copy; {new Date().getFullYear()} Koshy's Vintage Vault. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }

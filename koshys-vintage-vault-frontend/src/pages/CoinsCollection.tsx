@@ -16,9 +16,6 @@ function CoinsCollection() {
       <section className="page-header">
         <div className="container">
           <h1 className="page-title">Rare Coins Collection</h1>
-          <p className="page-subtitle">
-            Discover our curated selection of the world's most sought-after numismatic treasures
-          </p>
           <CollectionFilters options={options} values={filters} onChange={setFilters} />
         </div>
       </section>

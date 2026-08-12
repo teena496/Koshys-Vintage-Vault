@@ -39,9 +39,8 @@ function Navbar({ currentPage }: NavbarProps) {
       <div className="container navbar-content">
         <Link to="/" className="logo-container" onClick={handleLogoClick}>
           <span className="logo-frame">
-            <img src="/navbar-icon.png" alt="Koshy's Vintage Vault" className="logo" />
+            <img src="/navbar-brand.png" alt="Koshy's Vintage Vault" className="logo" />
           </span>
-          <h1 className="brand-name">Koshy's Vintage Vault</h1>
         </Link>
         <button
           type="button"

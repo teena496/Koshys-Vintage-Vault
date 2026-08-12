@@ -16,9 +16,6 @@ function StampsCollection() {
       <section className="page-header">
         <div className="container">
           <h1 className="page-title">Rare Stamps Collection</h1>
-          <p className="page-subtitle">
-            Discover our curated selection of the world's most sought-after philatelic treasures
-          </p>
           <CollectionFilters options={options} values={filters} onChange={setFilters} />
         </div>
       </section>

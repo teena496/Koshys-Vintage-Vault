@@ -15,9 +15,6 @@ export default function PostalCoversCollection() {
       <section className="page-header">
         <div className="container">
           <h1 className="page-title">Postal Covers Collection</h1>
-          <p className="page-subtitle">
-            Explore historic envelopes, postmarks, routes, and first-day covers that document postal history
-          </p>
           <CollectionFilters options={options} values={filters} onChange={setFilters} />
         </div>
       </section>
