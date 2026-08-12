@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { addCustomItem, deleteCustomItem, getCustomItems, updateCustomItem, type CollectionItem, type CollectionType } from '../data/collectionStore'
+import { addCustomItem, deleteCustomItem, getCollectionFilterOptions, getCollectionPage, updateCustomItem, type CollectionFilterOptions, type CollectionItem, type CollectionType } from '../data/collectionStore'
+import { emptyCollectionFilters, type CollectionFilterValues } from '../data/collectionFilters'
+import CollectionFilters from '../components/CollectionFilters'
+import CollectionPagination from '../components/CollectionPagination'
 import { useAuth } from '../auth/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import './Admin.css'
@@ -34,6 +37,12 @@ function Admin() {
   const [statusMessage, setStatusMessage] = useState('')
   const [fileInputKey, setFileInputKey] = useState(0)
   const [savedItems, setSavedItems] = useState<CollectionItem[]>([])
+  const [filters, setFilters] = useState<CollectionFilterValues>(emptyCollectionFilters)
+  const [filterOptions, setFilterOptions] = useState<CollectionFilterOptions>({ countries: [], years: [] })
+  const [page, setPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [listLoading, setListLoading] = useState(true)
+  const [listRefreshKey, setListRefreshKey] = useState(0)
   const [editingItem, setEditingItem] = useState<CollectionItem | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [adminMenuOpen, setAdminMenuOpen] = useState(false)
@@ -42,19 +51,38 @@ function Admin() {
   const adminMenuToggleRef = useRef<HTMLButtonElement>(null)
   const itemLabel = activeTab === 'stamps' ? 'Stamp' : activeTab === 'coins' ? 'Coin' : 'Postal Cover'
   const nameCharacterLimit = 40
+  const adminPageSize = 8
+  const totalPages = Math.max(1, Math.ceil(total / adminPageSize))
 
   useEffect(() => {
     let active = true
-    getCustomItems(activeTab)
-      .then(items => { if (active) setSavedItems(items) })
+    getCollectionPage(activeTab, filters, page, adminPageSize)
+      .then(result => {
+        if (active) {
+          setSavedItems(result.items)
+          setTotal(result.total)
+          setListLoading(false)
+        }
+      })
       .catch(() => {
         if (active) {
+          setSavedItems([])
+          setTotal(0)
+          setListLoading(false)
           setSubmitStatus('error')
           setStatusMessage('Unable to load saved items. Confirm that the Supabase migrations are deployed.')
         }
       })
     return () => { active = false }
-  }, [activeTab])
+  }, [activeTab, filters, page, listRefreshKey])
+
+  useEffect(() => {
+    let active = true
+    getCollectionFilterOptions(activeTab)
+      .then(options => { if (active) setFilterOptions(options) })
+      .catch(() => { if (active) setFilterOptions({ countries: [], years: [] }) })
+    return () => { active = false }
+  }, [activeTab, listRefreshKey])
 
   useEffect(() => {
     if (submitStatus === 'idle') return
@@ -174,15 +202,16 @@ function Admin() {
       }
 
       if (editingItem) {
-        const updatedItem = await updateCustomItem(activeTab, editingItem, values, formData.image)
-        setSavedItems(items => items.map(item => item.id === updatedItem.id ? updatedItem : item))
+        await updateCustomItem(activeTab, editingItem, values, formData.image)
         setStatusMessage(`${itemLabel} updated successfully.`)
       } else {
-        const savedItem = await addCustomItem(activeTab, values, formData.image as File)
-        setSavedItems(items => [savedItem, ...items])
+        await addCustomItem(activeTab, values, formData.image as File)
+        setPage(1)
         setStatusMessage(`${itemLabel} saved and added to the collection.`)
       }
 
+      setListLoading(true)
+      setListRefreshKey(key => key + 1)
       resetForm()
       setShowForm(false)
       setSubmitStatus('success')
@@ -207,6 +236,10 @@ function Admin() {
     setShowForm(false)
     setAdminMenuOpen(false)
     setSubmitStatus('idle')
+    setFilters(emptyCollectionFilters)
+    setFilterOptions({ countries: [], years: [] })
+    setPage(1)
+    setListLoading(true)
     setActiveTab(type)
   }
 
@@ -246,7 +279,11 @@ function Admin() {
 
     try {
       await deleteCustomItem(item)
-      setSavedItems(items => items.filter(savedItem => savedItem.id !== item.id))
+      const remainingTotal = Math.max(0, total - 1)
+      const remainingPages = Math.max(1, Math.ceil(remainingTotal / adminPageSize))
+      setPage(currentPage => Math.min(currentPage, remainingPages))
+      setListLoading(true)
+      setListRefreshKey(key => key + 1)
       setSubmitStatus('success')
       setStatusMessage(`${item.name} was deleted from the collection.`)
     } catch (error) {
@@ -259,6 +296,17 @@ function Admin() {
   const handleSignOut = async () => {
     await signOut()
     navigate('/sign-in', { replace: true })
+  }
+
+  const handleFilterChange = (values: CollectionFilterValues) => {
+    setFilters(values)
+    setPage(1)
+    setListLoading(true)
+  }
+
+  const handlePageChange = (nextPage: number) => {
+    setPage(nextPage)
+    setListLoading(true)
   }
 
   return (
@@ -548,8 +596,8 @@ function Admin() {
                   {itemLabel} details
                 </h2>
               </div>
-              <span className="item-count" aria-label={`${savedItems.length} saved items`}>
-                {savedItems.length} {savedItems.length === 1 ? 'item' : 'items'}
+              <span className="item-count" aria-label={`${total} matching saved items`}>
+                {total} {total === 1 ? 'item' : 'items'}
               </span>
               <button type="button" className="btn btn-primary add-item-button" onClick={handleAdd}>
                 <span className="add-item-label-full">Add {itemLabel}</span>
@@ -557,9 +605,17 @@ function Admin() {
               </button>
             </div>
 
-            {savedItems.length === 0 ? (
+            <div className="admin-list-controls">
+              <CollectionFilters options={filterOptions} values={filters} onChange={handleFilterChange} />
+            </div>
+
+            {listLoading ? (
+              <p className="empty-list-message" role="status">Loading inventory…</p>
+            ) : savedItems.length === 0 ? (
               <p className="empty-list-message">
-                No {activeTab === 'covers' ? 'postal covers' : activeTab} have been added yet. Complete the form above to create the first entry.
+                {total === 0 && (filters.search || filters.country || filters.year || filters.currency)
+                  ? `No ${activeTab === 'covers' ? 'postal covers' : activeTab} match these filters.`
+                  : `No ${activeTab === 'covers' ? 'postal covers' : activeTab} have been added yet. Add the first entry to begin.`}
               </p>
             ) : (
               <div className="admin-items-list">
@@ -599,6 +655,9 @@ function Admin() {
                   </article>
                 ))}
               </div>
+            )}
+            {!listLoading && (
+              <CollectionPagination page={page} totalPages={totalPages} total={total} onChange={handlePageChange} />
             )}
           </section>
         </div>
