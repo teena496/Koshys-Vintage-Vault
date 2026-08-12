@@ -32,17 +32,26 @@
   gap: var(--space-4);
 }
 
-.logo {
+.logo-frame {
+  display: block;
   height: 58px;
-  width: 88px;
+  width: 58px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+}
+
+.logo {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: center;
-  border-radius: var(--radius-sm);
+  transform: scale(2.05) translateY(17%);
   transition: transform var(--transition-base);
 }
 
 .logo:hover {
-  transform: scale(1.05);
+  transform: scale(2.05) translateY(17%);
 }
 
 .brand-name {
@@ -63,7 +72,10 @@
 
 .nav-links a {
   color: var(--color-cream);
-  font-weight: 650;
+  font-family: var(--font-nav);
+  font-size: var(--text-base);
+  font-weight: 600;
+  letter-spacing: 0.045em;
   padding: var(--space-3) var(--space-2);
   transition: color var(--transition-base);
   position: relative;
@@ -478,9 +490,9 @@
 }
 
 @media (max-width: 480px) {
-  .logo {
+  .logo-frame {
     height: 44px;
-    width: 66px;
+    width: 44px;
   }
   
   .brand-name {

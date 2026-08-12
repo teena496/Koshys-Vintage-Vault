@@ -58,7 +58,7 @@ export default function PostalCoversCollection() {
         <div className="container">
           <div className="footer-content">
             <div className="footer-section">
-              <h3>Koshy's Heritage Vault</h3>
+              <h3>Koshy's Vintage Vault</h3>
               <p>Your trusted source for rare stamps, coins, and postal history.</p>
             </div>
             <div className="footer-section">
@@ -77,7 +77,7 @@ export default function PostalCoversCollection() {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>&copy; {new Date().getFullYear()} Koshy's Heritage Vault. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} Koshy's Vintage Vault. All rights reserved.</p>
           </div>
         </div>
       </footer>

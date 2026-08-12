@@ -38,6 +38,7 @@
 }
 
 .admin-subtitle {
+  font-family: var(--font-subheading);
   font-size: var(--text-xl);
   color: var(--color-cream-dark);
   max-width: 700px;

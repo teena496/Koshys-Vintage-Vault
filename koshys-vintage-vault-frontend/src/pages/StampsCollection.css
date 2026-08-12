@@ -22,6 +22,7 @@
 }
 
 .page-subtitle {
+  font-family: var(--font-subheading);
   font-size: var(--text-xl);
   color: var(--color-cream-dark);
   max-width: 700px;
@@ -111,7 +112,7 @@
 }
 
 .stamp-name {
-  font-family: var(--font-display);
+  font-family: var(--font-subheading);
   font-size: var(--text-2xl);
   color: var(--color-navy);
   margin-bottom: var(--space-3);
@@ -147,7 +148,7 @@
 }
 
 .stamp-price {
-  font-family: var(--font-display);
+  font-family: var(--font-subheading);
   font-size: var(--text-xl);
   font-weight: 700;
   color: var(--color-burgundy);

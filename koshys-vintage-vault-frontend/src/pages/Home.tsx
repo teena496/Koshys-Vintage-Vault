@@ -9,20 +9,22 @@ function Home() {
       <Navbar currentPage="home" />
 
       {/* Hero Section */}
-      <section id="home" className="hero">
-        <img src="/stamps-hero.png" alt="Vintage Stamps Collection" className="hero-background" />
+      <section id="home" className="hero landing-hero" aria-labelledby="landing-title">
+        <img src="/landing-hero-collection.png" alt="Antique coin, postage stamp, postal cover, and brass magnifying glass" className="hero-background" />
         <div className="hero-overlay"></div>
         <div className="hero-content">
-          <img src="/brand-logo.png" alt="Koshy's Heritage Vault — coins, stamps, stories through time" className="hero-logo" />
-          <h1 className="hero-title">Koshy's Heritage Vault</h1>
-          <p className="hero-subtitle">Timeless Treasures from Bygone Eras</p>
-          <p className="hero-description">
-            Discover our curated collection of rare stamps and coins, each piece telling a unique story 
-            from history. We specialize in premium collectibles that connect you to the past.
-          </p>
-          <div className="hero-cta">
-            <Link to="/stamps" className="btn btn-primary">Explore Collections</Link>
-            <a href="#contact" className="btn btn-secondary">Contact Us</a>
+          <div className="hero-copy">
+            <p className="hero-eyebrow">Coins · Stamps · Postal History</p>
+            <h1 id="landing-title" className="hero-title">Collect history.<br />Preserve its story.</h1>
+            <p className="hero-subtitle">A considered collection of timeless pieces from around the world.</p>
+            <p className="hero-description">
+              Explore coins, stamps, and postal covers selected for collectors who value history,
+              craftsmanship, and the stories behind every object.
+            </p>
+            <div className="hero-cta">
+              <a href="#collections" className="btn btn-primary">Explore the vault</a>
+              <a href="#about" className="btn btn-secondary">Our story</a>
+            </div>
           </div>
         </div>
       </section>
@@ -31,8 +33,9 @@ function Home() {
       <section id="collections" className="collections">
         <div className="container">
           <div className="section-header">
+            <p className="section-kicker">Inside the vault</p>
             <h2 className="section-title">Featured Collections</h2>
-            <p className="section-subtitle">Explore our finest stamps and coins from around the world</p>
+            <p className="section-subtitle">Browse each collection and discover the history held within.</p>
           </div>
           
           <div className="collections-grid">
@@ -42,8 +45,7 @@ function Home() {
               <div className="collection-overlay">
                 <h3 className="collection-title">Rare Stamps</h3>
                 <p className="collection-description">
-                  Exquisite philatelic treasures from different eras and countries. Each stamp is carefully 
-                  authenticated and preserved to museum-quality standards.
+                  Philatelic pieces spanning eras, countries, and the evolution of postal communication.
                 </p>
               </div>
             </Link>
@@ -54,15 +56,13 @@ function Home() {
               <div className="collection-overlay">
                 <h3 className="collection-title">Antique Coins</h3>
                 <p className="collection-description">
-                  Historic numismatic pieces including gold and silver coins from ancient civilizations 
-                  to modern rarities. Investment-grade collectibles.
+                  Numismatic pieces that reflect the people, places, and craftsmanship of their time.
                 </p>
               </div>
             </Link>
 
-            {/* Expert Authentication */}
             <Link to="/postal-covers" className="collection-card">
-              <img src="/stamp-inverted-jenny.png" alt="Historic postal covers" className="collection-image" />
+              <img src="/postal-covers-collection.png" alt="Historic postal cover with stamps, postmarks, and wax seal" className="collection-image" />
               <div className="collection-overlay">
                 <h3 className="collection-title">Postal Covers</h3>
                 <p className="collection-description">
@@ -71,17 +71,6 @@ function Home() {
               </div>
             </Link>
 
-            {/* Expert Authentication */}
-            <div className="collection-card">
-              <img src="/examining.png" alt="Expert Authentication" className="collection-image" />
-              <div className="collection-overlay">
-                <h3 className="collection-title">Expert Authentication</h3>
-                <p className="collection-description">
-                  Every piece in our collection is meticulously examined and authenticated by our team 
-                  of experts to ensure authenticity and quality.
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -91,9 +80,10 @@ function Home() {
         <div className="container">
           <div className="about-content">
             <div className="about-text">
+              <p className="section-kicker section-kicker-light">Our perspective</p>
               <h2>A Legacy of Excellence</h2>
               <p>
-                Koshy's Heritage Vault brings stamps, coins, and postal history together for collectors
+                Koshy's Vintage Vault brings stamps, coins, and postal history together for collectors
                 who value the stories carried by every piece.
               </p>
               <p>
@@ -119,7 +109,7 @@ function Home() {
         <div className="container">
           <div className="footer-content">
             <div className="footer-section">
-              <h3>Koshy's Heritage Vault</h3>
+              <h3>Koshy's Vintage Vault</h3>
               <p>
                 Your trusted source for rare stamps and coins. Preserving history, one collectible at a time.
               </p>
@@ -144,7 +134,7 @@ function Home() {
           </div>
           
           <div className="footer-bottom">
-            <p>&copy; {new Date().getFullYear()} Koshy's Heritage Vault. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} Koshy's Vintage Vault. All rights reserved.</p>
           </div>
         </div>
       </footer>
