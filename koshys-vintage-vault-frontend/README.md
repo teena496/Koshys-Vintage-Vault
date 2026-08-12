@@ -1,5 +1,7 @@
 # React + TypeScript + Vite
 
+Project QA steps are documented in [MANUAL_TESTING.md](./MANUAL_TESTING.md).
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
